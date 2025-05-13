@@ -83,26 +83,10 @@ fn main() -> visa_rs::Result<()> {
     // Set current limit to a safe value
     cld1015.write_all(b"SOURce:CURRent:LIMit:AMPLitude 100MA\n").map_err(io_to_vs_err)?;
     
-    // Configure the OSA for the experiment
-    // Set center wavelength to expected laser wavelength and span
-    osa.write_all(b"CENTERWL 980NM;SPANWL 10NM;RL 10DBM;\n").map_err(io_to_vs_err)?;
-    // Trigger a new sweep on the OSA and confirm it's done before proceeding to update the trace data
-    osa.write_all(b"TS;DONE?;\n").map_err(io_to_vs_err)?; // Take sweep
-    let mut done_resp = String::new();
-    {
-        let mut reader = BufReader::new(&osa);
-        reader.read_line(&mut done_resp).map_err(io_to_vs_err)?;
-    }
-    if done_resp.trim() != "1" {
-        println!("Warning: Sweep not confirmed complete. Response: {}", done_resp.trim());
-    } else {
-        println!("Finished sweep");
-    }
-    
     // Configure and run the current sweep
     let start_ma = 0.0;     // Start at 0 mA
     let stop_ma = 100.0;    // End at 100 mA
-    let step_ma = 5.0;      // 5 mA steps
+    let step_ma = 1.0;      // 1 mA steps
     let dwell_time_ms = 100; // 100ms stabilization delay
     
     experiment::run_current_sweep(&mut cld1015, &mut osa, start_ma, stop_ma, step_ma, dwell_time_ms)?;
