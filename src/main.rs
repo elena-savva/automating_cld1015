@@ -86,8 +86,8 @@ fn main() -> visa_rs::Result<()> {
     // Configure and run the current sweep
     let start_ma = 0.0;     // Start at 0 mA
     let stop_ma = 100.0;    // End at 100 mA
-    let step_ma = 1.0;      // 1 mA steps
-    let dwell_time_ms = 100; // 100ms stabilization delay
+    let step_ma = 0.1;      // 1 mA steps
+    let dwell_time_ms = 50; // 100ms stabilization delay
     
     experiment::run_current_sweep(&mut cld1015, &mut osa, start_ma, stop_ma, step_ma, dwell_time_ms)?;
     

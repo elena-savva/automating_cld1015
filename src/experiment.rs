@@ -32,13 +32,13 @@ pub fn run_current_sweep(
     
     // Configure the OSA for measurements
     osa.write_all(b"SNGLS;\n").map_err(io_to_vs_err)?; // Set to single sweep mode
-    osa.write_all(b"CENTERWL 980NM;SPANWL 20NM;\n").map_err(io_to_vs_err)?;
+    osa.write_all(b"CENTERWL 974.7NM;SPANWL 2NM;\n").map_err(io_to_vs_err)?;
 
     
-    let center_wl = 980.0; // Center wavelength in nm
-    let span_wl = 20.0;    // Span in nm
-    let start_wl = center_wl - (span_wl / 2.0); // 970 nm
-    let stop_wl = center_wl + (span_wl / 2.0);  // 990 nm
+    let center_wl = 974.7; // Center wavelength in nm
+    let span_wl = 2.0;    // Span in nm
+    let start_wl = center_wl - (span_wl / 2.0); 
+    let stop_wl = center_wl + (span_wl / 2.0);  
 
     // Get number of data points in trace
     osa.write_all(b"MDS?;\n").map_err(io_to_vs_err)?;
@@ -55,14 +55,14 @@ pub fn run_current_sweep(
     println!("Laser turned OFF");
 
     // Wait for initial stabilization
-    std::thread::sleep(Duration::from_millis(500));
+    std::thread::sleep(Duration::from_millis(100));
     
     // Turn laser ON
     cld1015.write_all(b"OUTPut:STATe 1\n").map_err(io_to_vs_err)?;
     println!("Laser turned ON");
     
     // Wait for initial stabilization
-    std::thread::sleep(Duration::from_millis(500));
+    std::thread::sleep(Duration::from_millis(100));
     
     // Perform the sweep
     for i in 0..num_points {
